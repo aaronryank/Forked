@@ -21,7 +21,6 @@ Factoids:
 
 General commands:
 
-    . no-op
     | no-op if not next to a fork
     - no-op if not next to a fork
     & exit
