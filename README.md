@@ -5,7 +5,7 @@
  - **If you would like to contribute to this language, please fork (ba dum crash) and PR.**
  - **Do not implement this language. It is bound to change very frequently.**
 
-Forked is an esoteric stack-based two-dimensional language with multiple IPs, based on [Triangular](//git.io/triangular) and written around the [fork command](#Fork).
+Forked is an esoteric stack-based two-dimensional language with multiple IPs, based on [Triangular](//git.io/triangular) and written around the [fork command](#fork).
 
 Forked starts with IP 0 at the first (upper left) command, travelling right. The IP wraps around in the current direction if it hits an edge.
 
