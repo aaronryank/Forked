@@ -14,8 +14,7 @@ Factoids:
  - There are about six different ways to do everything in Forked.
  - There are actually six different ways to enter loops.
  - There are six directionals and six I/O commands.
- - 666. ha.
- - 555. This is a test.
+ - `666`. ha.
  - A program in the shape of a fork is a thing. \[citation-needed\]
 
 # Commands
