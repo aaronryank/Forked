@@ -167,9 +167,3 @@ Reverse input:
     | |
     \-:-v
     &{!}<
-
-# Todo
-
- - Multiple IPs, one command to jump to the IP index specified in ToS
- - if an IP index has not yet been created, it will be created where IP 0 started
- - Jump enter/exit (requires fork syntax)
