@@ -92,22 +92,26 @@ IP:
 
     : fork the program
 
-The fork is the only conditional. It must be entered from either up, down, left, or right using `|` or `-`. **Jumps cannot be used to enter forks.**
+The fork is the only conditional. It may be entered from any direction, and changes the direction of the IP according to the value on the top of the stack. **Jumps cannot be used to enter forks.**
 
-    -:  enters the fork from the left
+    -:  enters the fork from the East
 
-     :- enters the fork from the right
+     :- enters the fork from the West
 
      |
-     :  enters the fork from the top
+     :  enters the fork from the North
 
-     :  enters the fork from the bottom
+     :  enters the fork from the South
      |
 
-if entered from right, the fork will direct the IP up if truthy and down if falsy.
-if entered from left, the fork will direct the IP down if truthy and up if falsy.
-if entered from top, the fork will direct the IP right if truthy and left if falsy.
-if entered from bottom, the fork will direct the IP left if truthy and right if falsy.
+If the value on the top of the stack is truthy, the instruction pointer turns right; otherwise it turns left.
+
+|Fork entered from...|New IP direction if truthy|New IP direction if falsy|
+|-|-|-|
+|West|North|South|
+|East|South|North|
+|North|East|West|
+|South|West|East|
 
 ## Fork Examples
 
@@ -116,14 +120,14 @@ This doesn't do anything.
         v       direct down
         $       read input
         |       enter fork from top
-    &---:--&    split, go left if falsy, right if truthy
+    &---:--&    split, go left if truthy, right if falsy
 
 Neither does this.
 
       v
       $    >-----&
       |    |
-      >----:        enter fork from left, fork up if truthy, down if falsy
+      >----:        enter fork from left, fork up if falsy, down if truthy
            |
     &------<
 
@@ -138,61 +142,34 @@ This runs infinitely in a very messy way but illustrates the language quite well
     | | |
     | | |
 
-(I like that one. The code is read as `v|||:-`, then `/|||/\|||\-:-` infinitely, which is a pretty cool way to infinite loop IMNSHO.)
+(I like that one. The code is read as `v|||:-`, then `/|||/\|||\-:-` infinitely.)
 
 # Examples (golfy)
 
 Truth machine:
 
-       v
-       $
-       |
-    &%-:-{%}
+        v
+        $
+        |
+    {%}-:-%&
 
 Cat program:
 
-      v-\
-      ~ @
-      | | 
-    &-:-/
+    >-v
+    @ ~
+    | | 
+    \-:-&
 
 Reverse input:
 
-      v-\
-      ~ |
-      | |
-    v-:-/
-    >{!}&
-
-# Examples (non-golfy)
-
-Truth machine:
-
-     ---v     >----%--&
-        |     |
-        >--$--:
-              |
-              >---{%}-&
-
-Cat program:
-
-    ---v--@--<
-       |     |
-       >--~--:
-             |
-             >---&
-
-Reverse input:
-
-    ---v-----<
-       |     |
-       >--~--:
-             |
-             >---{-!-}---&
+    >-v
+    | ~
+    | |
+    \-:-v
+    &{!}<
 
 # Todo
 
  - Multiple IPs, one command to jump to the IP index specified in ToS
  - if an IP index has not yet been created, it will be created where IP 0 started
  - Jump enter/exit (requires fork syntax)
- - ***Get a better name for heaven's sake***
