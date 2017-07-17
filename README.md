@@ -217,10 +217,14 @@ This runs infinitely in a very messy way but illustrates the language quite well
 
 Truth machine:
 
+{% raw %}
+
         v
         $
         |
     {%}-:-%&
+
+{% endraw %}
 
 Cat program:
 
