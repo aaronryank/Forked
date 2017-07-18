@@ -54,7 +54,7 @@ Stack:
     g postfix MORETHAN  pop values used, push result    (heh mlg)
     0 push 0 to stack. 1 pushes 1, 2 pushes 2, etc.
     A push 10 to stack. B pushes 11, ... F pushes 15.
-    # duplicate ToS
+    d duplicate ToS
     p pop ToS
     . pop the stack index stored in the ToS
     , pop the stack index stored in the ToS, then the ToS
@@ -89,6 +89,8 @@ IP:
 # Fork
 
     : fork the program
+    ; IP-fork the program
+    # random-fork the program
 
 The fork is the only conditional.
 It may be entered from any direction, and changes the direction of the IP according to the value on the top of the stack.
@@ -133,6 +135,8 @@ This will also:
       |  -----
       >--:
          >----
+
+The random fork, `#`, acts exactly like the fork command `:`, except picks randomly between the two available directions.
 
 # IPs
 
