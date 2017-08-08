@@ -184,5 +184,32 @@ void do_fork(void)
             case3 = 1;
     }
 
-    printf("\ndirection = %d, case1 = %d, case2 = %d, case3 = %d\n",direction,case1,case2,case3);
+    if (case1 && case2 && case3) {
+        if (direction == WEST) {
+            if (stack[size-1] >= 0)
+                direction = NORTH;
+            else
+                direction = SOUTH;
+        }
+        else if (direction == NORTH) {
+            if (stack[size-1] >= 0)
+                direction = EAST;
+            else
+                direction = WEST;
+        }
+        else if (direction == EAST) {
+            if (stack[size-1] >= 0)
+                direction = SOUTH;
+            else
+                direction = NORTH;
+        }
+        else if (direction == SOUTH) {
+            if (stack[size-1] >= 0)
+                direction = WEST;
+            else
+                direction = EAST;
+        }
+    }
+
+    //printf("\ndirection = %d, case1 = %d, case2 = %d, case3 = %d\n",direction,case1,case2,case3);
 }
