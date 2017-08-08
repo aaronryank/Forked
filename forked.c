@@ -33,7 +33,7 @@ int interp(void)
 
         if (x < 0) {
             if (direction == WEST)
-                while (buf[y][x++]);
+                while (buf[y][++x]);
             else
                 return 1;
         }
@@ -47,12 +47,18 @@ int interp(void)
             return 2;
         }
         else if (buf[y][x] <= 0) {
-            return 2;
+            if (direction == EAST)
+                while (buf[y][--x]);
+            else if (direction == SOUTH)
+                while (buf[--y][x]);
+            else
+                return 2;
         }
     }
 }
 
 void mirror(char);
+void do_fork(void);
 
 int parse(char command)
 {
@@ -71,8 +77,7 @@ int parse(char command)
       case '<': direction = WEST;   break;
 
       /* mirrors */
-      case '\\': mirror('\\'); break;
-      case '/':  mirror('/');  break;
+      case '\\': case '/': mirror(command); break;
 
       /* input */
       case '$': scanf("%d",&stack[size++]); break;
@@ -113,6 +118,9 @@ int parse(char command)
       case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
       stack[size++] = command - 'A' + 10;
       break;
+
+      /* fork */
+      case ':': do_fork(); break;
     }
 
     return 0;
@@ -131,9 +139,50 @@ void mirror(char m)
     else if (m == '/') {
         switch (direction) {
           case EAST: direction = NORTH; break;
-          case NORTH: direction = WEST; break;
+          case NORTH: direction = EAST; break;
           case WEST: direction = SOUTH; break;
-          case SOUTH: direction = EAST; break;
+          case SOUTH: direction = WEST; break;
         }
     }
+}
+
+void do_fork(void)
+{
+    int case1, case2, case3;
+    case1 = case2 = case3 = 0;
+
+    if (direction == NORTH) {
+        if (buf[y+1][x] == '|')
+            case1 = 1;
+        if (buf[y][x-1] == '-')
+            case2 = 1;
+        if (buf[y][x+1] == '-')
+            case3 = 1;
+    }
+    else if (direction == SOUTH) {
+        if (buf[y-1][x] == '|')
+            case1 = 1;
+        if (buf[y][x-1] == '-')
+            case2 = 1;
+        if (buf[y][x+1] == '-')
+            case3 = 1;
+    }
+    else if (direction == WEST) {
+        if (buf[y][x+1] == '-')
+            case1 = 1;
+        if (buf[y-1][x] == '|')
+            case2 = 1;
+        if (buf[y+1][x] == '|')
+            case3 = 1;
+    }
+    else if (direction == EAST) {
+        if (buf[y][x-1] == '-')
+            case1 = 1;
+        if (buf[y-1][x] == '|')
+            case2 = 1;
+        if (buf[y+1][x] == '|')
+            case3 = 1;
+    }
+
+    printf("\ndirection = %d, case1 = %d, case2 = %d, case3 = %d\n",direction,case1,case2,case3);
 }
