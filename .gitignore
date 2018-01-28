@@ -1,0 +1,4 @@
+interp
+*.o
+*.exe
+*.out

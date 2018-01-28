@@ -67,8 +67,6 @@ int parse(char command)
 
     switch (command) {
       case '&': return -1;
-      case '.': if (size && (stack[size-1] > 0))  { return -1; } break;
-      case ',': if (size && (stack[size-1] <= 0)) { return -1; } break;
 
       /* directionals */
       case '^': direction = NORTH;  break;
