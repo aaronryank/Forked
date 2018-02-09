@@ -10,47 +10,49 @@ int jumpnum;
 
 enum { UNDEF, NORTH, EAST, SOUTH, WEST };
 
-int direction, x, y;
+struct { int direction, x, y; } ips[500];
+int ip_top;
+#define ip ips[ip_top]
 
 int interp(void)
 {
-    direction = EAST;
+    ip.direction = EAST;
 
     while (1) {
 
-        if (!buf[y][0])
+        if (!buf[ip.y][0])
             return 0;
 
-        if (parse(buf[y][x]) == -1)
+        if (parse(buf[ip.y][ip.x]) == -1)
             return 0;
 
-        switch (direction) {
-          case NORTH: y--;  break;
-          case EAST:  x++;  break;
-          case SOUTH: y++;  break;
-          case WEST:  x--;  break;
+        switch (ip.direction) {
+          case NORTH: ip.y--;  break;
+          case EAST:  ip.x++;  break;
+          case SOUTH: ip.y++;  break;
+          case WEST:  ip.x--;  break;
         }
 
-        if (x < 0) {
-            if (direction == WEST)
-                while (buf[y][++x]);
+        if (ip.x < 0) {
+            if (ip.direction == WEST)
+                while (buf[ip.y][++(ip.x)]);
             else
                 return 1;
         }
-        else if (y < 0) {
-            if (direction == NORTH)
-                while (y++ < bufsize);
+        else if (ip.y < 0) {
+            if (ip.direction == NORTH)
+                while (ip.y++ < bufsize);
             else
                 return 1;
         }
-        else if (y >= 1000) {
+        else if (ip.y >= 1000) {
             return 2;
         }
-        else if (buf[y][x] <= 0) {
-            if (direction == EAST)
-                while (buf[y][--x]);
-            else if (direction == SOUTH)
-                while (buf[--y][x]);
+        else if (buf[ip.y][ip.x] <= 0) {
+            if (ip.direction == EAST)
+                while (buf[ip.y][--(ip.x)]);
+            else if (ip.direction == SOUTH)
+                while (buf[--(ip.y)][ip.x]);
             else
                 return 2;
         }
@@ -69,10 +71,10 @@ int parse(char command)
       case '&': return -1;
 
       /* directionals */
-      case '^': direction = NORTH;  break;
-      case 'v': direction = SOUTH;  break;
-      case '>': direction = EAST;   break;
-      case '<': direction = WEST;   break;
+      case '^': ip.direction = NORTH;  break;
+      case 'v': ip.direction = SOUTH;  break;
+      case '>': ip.direction = EAST;   break;
+      case '<': ip.direction = WEST;   break;
 
       /* mirrors */
       case '\\': case '/': mirror(command); break;
@@ -127,19 +129,19 @@ int parse(char command)
 void mirror(char m)
 {
     if (m == '\\') {
-        switch (direction) {
-          case EAST: direction = SOUTH; break;
-          case SOUTH: direction = WEST; break;
-          case WEST: direction = NORTH; break;
-          case NORTH: direction = EAST; break;
+        switch (ip.direction) {
+          case EAST: ip.direction = SOUTH; break;
+          case SOUTH: ip.direction = WEST; break;
+          case WEST: ip.direction = NORTH; break;
+          case NORTH: ip.direction = EAST; break;
         }
     }
     else if (m == '/') {
-        switch (direction) {
-          case EAST: direction = NORTH; break;
-          case NORTH: direction = EAST; break;
-          case WEST: direction = SOUTH; break;
-          case SOUTH: direction = WEST; break;
+        switch (ip.direction) {
+          case EAST: ip.direction = NORTH; break;
+          case NORTH: ip.direction = EAST; break;
+          case WEST: ip.direction = SOUTH; break;
+          case SOUTH: ip.direction = WEST; break;
         }
     }
 }
@@ -149,63 +151,63 @@ void do_fork(void)
     int case1, case2, case3;
     case1 = case2 = case3 = 0;
 
-    if (direction == NORTH) {
-        if (buf[y+1][x] == '|')
+    if (ip.direction == NORTH) {
+        if (buf[ip.y+1][ip.x] == '|')
             case1 = 1;
-        if (buf[y][x-1] == '-')
+        if (buf[ip.y][ip.x-1] == '-')
             case2 = 1;
-        if (buf[y][x+1] == '-')
+        if (buf[ip.y][ip.x+1] == '-')
             case3 = 1;
     }
-    else if (direction == SOUTH) {
-        if (buf[y-1][x] == '|')
+    else if (ip.direction == SOUTH) {
+        if (buf[ip.y-1][ip.x] == '|')
             case1 = 1;
-        if (buf[y][x-1] == '-')
+        if (buf[ip.y][ip.x-1] == '-')
             case2 = 1;
-        if (buf[y][x+1] == '-')
+        if (buf[ip.y][ip.x+1] == '-')
             case3 = 1;
     }
-    else if (direction == WEST) {
-        if (buf[y][x+1] == '-')
+    else if (ip.direction == WEST) {
+        if (buf[ip.y][ip.x+1] == '-')
             case1 = 1;
-        if (buf[y-1][x] == '|')
+        if (buf[ip.y-1][ip.x] == '|')
             case2 = 1;
-        if (buf[y+1][x] == '|')
+        if (buf[ip.y+1][ip.x] == '|')
             case3 = 1;
     }
-    else if (direction == EAST) {
-        if (buf[y][x-1] == '-')
+    else if (ip.direction == EAST) {
+        if (buf[ip.y][ip.x-1] == '-')
             case1 = 1;
-        if (buf[y-1][x] == '|')
+        if (buf[ip.y-1][ip.x] == '|')
             case2 = 1;
-        if (buf[y+1][x] == '|')
+        if (buf[ip.y+1][ip.x] == '|')
             case3 = 1;
     }
 
     if (case1 && case2 && case3) {
-        if (direction == WEST) {
-            if (stack[size-1] >= 0)
-                direction = NORTH;
+        if (ip.direction == WEST) {
+            if (stack[size-1] > 0)
+                ip.direction = NORTH;
             else
-                direction = SOUTH;
+                ip.direction = SOUTH;
         }
-        else if (direction == NORTH) {
-            if (stack[size-1] >= 0)
-                direction = EAST;
+        else if (ip.direction == NORTH) {
+            if (stack[size-1] > 0)
+                ip.direction = EAST;
             else
-                direction = WEST;
+                ip.direction = WEST;
         }
-        else if (direction == EAST) {
-            if (stack[size-1] >= 0)
-                direction = SOUTH;
+        else if (ip.direction == EAST) {
+            if (stack[size-1] > 0)
+                ip.direction = SOUTH;
             else
-                direction = NORTH;
+                ip.direction = NORTH;
         }
-        else if (direction == SOUTH) {
-            if (stack[size-1] >= 0)
-                direction = WEST;
+        else if (ip.direction == SOUTH) {
+            if (stack[size-1] > 0)
+                ip.direction = WEST;
             else
-                direction = EAST;
+                ip.direction = EAST;
         }
     }
 
