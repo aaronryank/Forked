@@ -58,14 +58,6 @@ Stack:
     p pop ToS
     . pop the stack index stored in the ToS
     , pop the stack index stored in the ToS, then the ToS
-    
-
-Loops:
-
-    { if entered (with `v^><|-`) from top or left, create jump point
-        otherwise, unconditionally jump back to most recently created jump point
-    } if entered (with `v^><|-`) from top or left, unconditionally jump back to the most recently created jump point
-        otherwise, create jump point
 
 Memory:
 
@@ -221,10 +213,11 @@ This runs infinitely in a very messy way but illustrates the language quite well
 
 Truth machine:
 
-        v
-        $
-        |
-    {%}-:-%&
+       v
+       $
+    >--v
+    |  |
+    ^%-:-%&
 
 Cat program:
 
