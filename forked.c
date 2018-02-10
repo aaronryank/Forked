@@ -11,17 +11,14 @@ int jumpnum;
 enum { UNDEF, NORTH, EAST, SOUTH, WEST };
 
 struct { int direction, x, y; } ips[500];
-int ip_top;
+int ip_top, ip_count;
 #define ip ips[ip_top]
 
 int interp(void)
 {
     ip.direction = EAST;
 
-    while (1) {
-
-        if (!buf[ip.y][0])
-            return 0;
+    while (1) { for (ip_top = 0; ip_top <= ip_count; ip_top++) {
 
         if (parse(buf[ip.y][ip.x]) == -1)
             return 0;
@@ -41,7 +38,7 @@ int interp(void)
         }
         else if (ip.y < 0) {
             if (ip.direction == NORTH)
-                while (ip.y++ < bufsize);
+                while (buf[(ip.y)++][ip.x]);
             else
                 return 1;
         }
@@ -56,7 +53,7 @@ int interp(void)
             else
                 return 2;
         }
-    }
+    }}
 }
 
 void mirror(char);
