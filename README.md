@@ -4,19 +4,13 @@ Forked is an esoteric stack-based two-dimensional language with multiple IPs,
 based on [Triangular](//git.io/triangular) and written around the [fork command](#Fork).
 Instructions are single-character commands.
 
-**Forked is an unimplemented WIP language. This repository just contains the spec.**
-
- - **If you would like to contribute to this language, please fork (ba dum crash) and PR.**
- - **If you have an opinion on a "TODO" item, or something is unclear, please open an issue.**
- - **Do not implement this language. It changes very frequently.**
-
 # Commands
 
 General commands:
 
     | no-op if not next to a fork
     - no-op if not next to a fork
-    & exit
+    & exit (if only the original IP is running, see IP section)
 
 Directionals:
 
@@ -69,14 +63,8 @@ Memory:
 IP:
 
     ; IP fork (see IP section)
-    [ switch to next IP
-    ] switch to previously created IP
-    ( create new IP here, switch to it
-    ) discard current IP, switch to previous (exits with nonzero return value if IP is 0)
-    I jump to IP specified in the top stack value
+    & destroy current IP
     ` bomb: destroy all instruction pointers except 0
-            if top of stack is truthy, set IP 0 to current point and run
-            otherwise, run IP 0 without changing its location
 
 # Fork
 
@@ -132,7 +120,7 @@ The random fork, `#`, acts exactly like the fork command `:`, except picks rando
 
 # IPs
 
-Forked has an infinite number of instruction pointers, each named by their index.
+Forked has an infinite number of instruction pointers running synchronously, each named by their index.
 IP 0 is created at the first (upper left) character in the source code, travelling right.
 
 If an IP hits the end of a playing field (a newline,) it will wrap around and continue going the same direction.
@@ -144,12 +132,8 @@ For example:
 will be infinitely read as "blah blah blah blah blah blah blah blah"
 (assuming `b`, `l`, `a`, and `h` do not change the direction).
 
-**TODO:** Should IPs wrap, or should it be discarded and go to the previous IP?
-
-The terminate command `&` acts exactly like `]` when reached with an IP other than 0.
-
-There is also the IP fork, `;`. It acts the same as `:` except when hit, it creates a new IP.
-The IPs are created at the two possible travel points of the IP after a fork. For example:
+The IP fork, `;`, is the only way to create a new IP. It acts the same as `:`.
+The IPs are created at the two possible travel points of the IP after a fork - turns right and continues the old IP, turns left and creates the new. For example:
 
       v   |
       1   |  <- new IP created here, does not run
