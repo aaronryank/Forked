@@ -58,7 +58,7 @@ Memory:
     P pop ToS into register
     S stash ToS in register
     U pull register to stack
-    O pop register
+    O zero register
 
 IP:
 
