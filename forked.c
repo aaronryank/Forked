@@ -116,6 +116,12 @@ int parse(char command)
       stack[size++] = command - 'A' + 10;
       break;
 
+      /* memory */
+      case 'P': size && (memory = stack[size-1]); size && (size--); break;
+      case 'S': size && (memory = stack[size-1]);                   break;
+      case 'U': stack[size++] = memory;                             break;
+      case 'O': memory = 0;                                         break;
+
       /* fork */
       case ':': do_fork(); break;
     }
