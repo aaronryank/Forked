@@ -15,6 +15,8 @@ struct { int direction, x, y; } ips[500];
 int ip_top, ip_count;
 #define ip ips[ip_top]
 
+int swap(int *, int *);
+
 int interp(void)
 {
     ip.direction = EAST;
@@ -95,6 +97,7 @@ int parse(char command)
       case '*': size > 1 && (stack[size-2] *= stack[size-1]); size > 1 && (size--);   break;
       case '_': size > 1 && (stack[size-2] /= stack[size-1]); size > 1 && (size--);   break;
       case 'm': size > 1 && (stack[size-2] %= stack[size-1]); size > 1 && (size--);   break;
+      case 's': size > 1 && swap(&stack[size-2],&stack[size-1]);                      break;
 
       case '=': size > 1 && (stack[size-2] = (stack[size-2] == stack[size-1]));
                 size > 1 && (size--);
@@ -216,4 +219,11 @@ void do_fork(void)
     }
 
     //printf("\ndirection = %d, case1 = %d, case2 = %d, case3 = %d\n",direction,case1,case2,case3);
+}
+
+int swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
