@@ -41,7 +41,7 @@ int interp(void)
         }
         else if (ip.y < 0) {
             if (ip.direction == NORTH)
-                while (buf[(ip.y)++][ip.x]);
+                while (buf[++(ip.y)][ip.x]);
             else
                 return 1;
         }
