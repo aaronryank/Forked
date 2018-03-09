@@ -1,7 +1,7 @@
 # Forked
 
 Forked is an esoteric stack-based two-dimensional language with multiple IPs,
-based on [Triangular](//git.io/triangular) and written around the [fork command](#Fork).
+based on [Triangular](//git.io/triangular) and written around the [fork command](#fork).
 Instructions are single-character commands.
 
 # Commands
